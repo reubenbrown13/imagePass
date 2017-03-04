@@ -41,6 +41,21 @@ component accessors=true output=false persistent=false {
       output[counter].r = ListGetAt(arguments.input, i, '\x');
       output[counter].b = ListGetAt(arguments.input, i+1, '\x');
       output[counter].g = ListGetAt(arguments.input, i+2, '\x');
+      if (counter % 3 EQ 0){
+        if (output[counter].r LT 100) {
+          output[counter].r = output[counter].r + 100;
+        }
+      }
+      else if (counter % 3 EQ 1) {
+        if (output[counter].b LT 100) {
+          output[counter].b = output[counter].b + 100;
+        }
+      }
+      else {
+        if (output[counter].g LT 100) {
+          output[counter].g = output[counter].g + 100;
+        }
+      }
       counter++;
     }
 
