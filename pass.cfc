@@ -41,20 +41,14 @@ component accessors=true output=false persistent=false {
       output[counter].r = ListGetAt(arguments.input, i, '\x');
       output[counter].b = ListGetAt(arguments.input, i+1, '\x');
       output[counter].g = ListGetAt(arguments.input, i+2, '\x');
-      if (counter % 3 EQ 0){
-        if (output[counter].r LT 100) {
-          output[counter].r = output[counter].r + 100;
-        }
+      if (counter % 3 EQ 0 AND output[counter].r LT 100) {
+        output[counter].r = output[counter].r + 100;
       }
-      else if (counter % 3 EQ 1) {
-        if (output[counter].b LT 100) {
-          output[counter].b = output[counter].b + 100;
-        }
+      else if (counter % 3 EQ 1 AND output[counter].b LT 100) {
+        output[counter].b = output[counter].b + 100;
       }
-      else {
-        if (output[counter].g LT 100) {
-          output[counter].g = output[counter].g + 100;
-        }
+      else if (counter % 3 EQ 2 AND output[counter].g LT 100) {
+        output[counter].g = output[counter].g + 100;
       }
       counter++;
     }
@@ -85,8 +79,16 @@ component accessors=true output=false persistent=false {
   **/
   remote function encString(required string input = "", string salt = ""){
     var size = floor(sqr(Len(arguments.input)+Len(arguments.salt)));
-    var output = convertString(ToBase64(arguments.input&arguments.salt, "utf-16"));
-    output = renderColorStruct(output, 10);
+    var output = "";
+    for(i=1; i LTE LEN(arguments.input); i++){
+      output = output&Mid(arguments.salt,i,1)&Mid(arguments.input,i,1)&Mid(arguments.salt,i+i-1,1);
+    }
+    if (Len(arguments.salt) GT i){
+      output = output&Right(arguments.salt,(Len(arguments.salt)-i));
+    }
+
+    output = convertString(ToBase64(output, "utf-16"));
+    output = renderColorStruct(output);
     output = renderImage(output, size, 10);
     return output;
   }
